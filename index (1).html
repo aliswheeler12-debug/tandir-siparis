@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tandır Ekmeği Siparişi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #FDF6EE;
+      --card: #FFFFFF;
+      --text: #1C1410;
+      --muted: #8A7060;
+      --border: #E8DDD3;
+      --accent: #C04A1A;
+      --accent-light: #FAECE7;
+      --accent-mid: #E8601F;
+      --wa-green: #25D366;
+      --wa-dark: #128C7E;
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem 4rem;
+      background-image: radial-gradient(ellipse at 20% 10%, rgba(192,74,26,0.06) 0%, transparent 50%),
+                        radial-gradient(ellipse at 80% 80%, rgba(192,74,26,0.04) 0%, transparent 50%);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .header-icon {
+      width: 72px;
+      height: 72px;
+      background: var(--accent);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.25rem;
+      font-size: 36px;
+      box-shadow: 0 8px 24px rgba(192,74,26,0.25);
+    }
+
+    .header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+      line-height: 1.2;
+    }
+
+    .header p {
+      font-size: 15px;
+      color: var(--muted);
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    .bread-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .bread-card {
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      text-align: center;
+      user-select: none;
+      background: #FDFAF7;
+    }
+
+    .bread-card:hover {
+      border-color: #D06030;
+      background: var(--accent-light);
+    }
+
+    .bread-card.selected {
+      border: 2px solid var(--accent);
+      background: var(--accent-light);
+    }
+
+    .bread-card .b-icon {
+      font-size: 38px;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .bread-card .b-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+
+    .bread-card.selected .b-name {
+      color: var(--accent);
+    }
+
+    .bread-card .b-desc {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .qty-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #FAF6F2;
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+    }
+
+    .qty-label {
+      font-size: 14px;
+      color: var(--muted);
+      flex: 1;
+    }
+
+    .qty-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: white;
+      cursor: pointer;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      font-weight: 500;
+      transition: background 0.15s;
+      flex-shrink: 0;
+    }
+
+    .qty-btn:hover {
+      background: var(--accent-light);
+      border-color: var(--accent);
+    }
+
+    .qty-display {
+      font-size: 22px;
+      font-weight: 500;
+      min-width: 40px;
+      text-align: center;
+      color: var(--text);
+      font-family: 'Playfair Display', serif;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="time"] {
+      width: 100%;
+      padding: 11px 14px;
+      font-size: 15px;
+      font-family: 'DM Sans', sans-serif;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: #FDFAF7;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+      background: white;
+    }
+
+    input::placeholder {
+      color: #BBA898;
+    }
+
+    .error {
+      font-size: 12px;
+      color: var(--accent);
+      margin-top: 6px;
+      display: none;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 16px;
+      background: var(--wa-green);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 16px;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 0.5rem;
+      transition: background 0.18s, transform 0.1s;
+      box-shadow: 0 4px 16px rgba(37,211,102,0.3);
+    }
+
+    .submit-btn:hover { background: var(--wa-dark); }
+    .submit-btn:active { transform: scale(0.98); }
+
+    .wa-icon { width: 22px; height: 22px; flex-shrink: 0; }
+
+    .hint {
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 10px;
+      line-height: 1.6;
+    }
+
+    .success-box {
+      background: #F0FBF4;
+      border: 1px solid #A8DFB8;
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      margin-bottom: 1rem;
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .success-box p {
+      font-size: 14px;
+      color: #1A6B35;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 1.25rem 0;
+    }
+
+    @media (max-width: 400px) {
+      .header h1 { font-size: 24px; }
+      .field-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="header-icon">🫓</div>
+    <h1>Tandır Ekmeği Siparişi</h1>
+    <p>Ürün seçin, miktarı belirtin ve sipariş verin</p>
+  </div>
+
+  <div class="card">
+    <div class="section-label">Ekmek Türü</div>
+    <div class="bread-grid">
+      <div class="bread-card" id="card-lavas" onclick="selectBread('lavas')">
+        <span class="b-icon">🫓</span>
+        <div class="b-name">Lavaş</div>
+        <div class="b-desc">İnce tandır lavaşı</div>
+      </div>
+      <div class="bread-card" id="card-yuvarlak" onclick="selectBread('yuvarlak')">
+        <span class="b-icon">🍞</span>
+        <div class="b-name">Yuvarlak Tandır</div>
+        <div class="b-desc">Geleneksel yuvarlak ekmek</div>
+      </div>
+    </div>
+    <div class="error" id="err-bread">Lütfen bir ekmek türü seçin.</div>
+  </div>
+
+  <div class="card">
+    <div class="section-label">Miktar</div>
+    <div class="qty-row">
+      <span class="qty-label">Adet sayısı</span>
+      <button class="qty-btn" onclick="changeQty(-5)">−</button>
+      <div class="qty-display" id="qty-display">15</div>
+      <button class="qty-btn" onclick="changeQty(5)">+</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-label">Müşteri Bilgisi</div>
+    <div class="field-group">
+      <input type="text" id="market-name" placeholder="Market veya müşteri adı" />
+      <div class="error" id="err-name">Lütfen isim girin.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-label">Teslim Tarihi ve Saati</div>
+    <div class="field-row">
+      <input type="date" id="del-date" />
+      <input type="time" id="del-time" value="09:00" />
+    </div>
+    <div class="error" id="err-date">Lütfen tarih ve saat girin.</div>
+  </div>
+
+  <div class="card">
+    <div class="section-label">Not (isteğe bağlı)</div>
+    <input type="text" id="note-text" placeholder="Özel istek veya açıklama..." />
+  </div>
+
+  <div class="success-box" id="success-box">
+    <p id="success-text"></p>
+  </div>
+
+  <button class="submit-btn" onclick="submitOrder()">
+    <svg class="wa-icon" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+    WhatsApp ile Sipariş Ver
+  </button>
+  <p class="hint">Butona tıkladığınızda WhatsApp açılacak ve<br>sipariş mesajı hazır gelecek, sadece gönderin.</p>
+</div>
+
+<script>
+  let selectedBread = null;
+  let qty = 15;
+  const WHATSAPP_NUMBER = '905343911169';
+
+  function selectBread(type) {
+    selectedBread = type;
+    document.getElementById('card-lavas').classList.toggle('selected', type === 'lavas');
+    document.getElementById('card-yuvarlak').classList.toggle('selected', type === 'yuvarlak');
+    document.getElementById('err-bread').style.display = 'none';
+  }
+
+  function changeQty(delta) {
+    qty = Math.max(1, qty + delta);
+    document.getElementById('qty-display').textContent = qty;
+  }
+
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
+  document.getElementById('del-date').value = yyyy + '-' + mm + '-' + dd;
+  document.getElementById('del-date').min = yyyy + '-' + mm + '-' + dd;
+
+  function formatDate(d) {
+    const [y, m, day] = d.split('-');
+    return day + '.' + m + '.' + y;
+  }
+
+  function submitOrder() {
+    let valid = true;
+    if (!selectedBread) {
+      document.getElementById('err-bread').style.display = 'block';
+      valid = false;
+    } else {
+      document.getElementById('err-bread').style.display = 'none';
+    }
+    const name = document.getElementById('market-name').value.trim();
+    if (!name) {
+      document.getElementById('err-name').style.display = 'block';
+      valid = false;
+    } else {
+      document.getElementById('err-name').style.display = 'none';
+    }
+    const date = document.getElementById('del-date').value;
+    const time = document.getElementById('del-time').value;
+    if (!date || !time) {
+      document.getElementById('err-date').style.display = 'block';
+      valid = false;
+    } else {
+      document.getElementById('err-date').style.display = 'none';
+    }
+    if (!valid) return;
+
+    const breadName = selectedBread === 'lavas' ? 'Lavaş' : 'Yuvarlak Tandır Ekmeği';
+    const note = document.getElementById('note-text').value.trim();
+    const dateStr = formatDate(date);
+
+    let msg = '🫓 *Yeni Sipariş*\n\n';
+    msg += '*Market/Müşteri:* ' + name + '\n';
+    msg += '*Ürün:* ' + breadName + '\n';
+    msg += '*Miktar:* ' + qty + ' adet\n';
+    msg += '*Teslim:* ' + dateStr + ' saat ' + time + '\n';
+    if (note) msg += '*Not:* ' + note + '\n';
+
+    const encoded = encodeURIComponent(msg);
+    const url = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encoded;
+
+    const box = document.getElementById('success-box');
+    box.style.display = 'block';
+    document.getElementById('success-text').textContent =
+      '✓ ' + name + ' — ' + qty + ' adet ' + breadName + ', ' + dateStr + ' ' + time + ' teslim. WhatsApp açılıyor...';
+
+    window.open(url, '_blank');
+  }
+</script>
+</body>
+</html>
